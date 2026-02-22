@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "undeadvariants:drowned_piglin",
+      "required": false
+    },
+    {
+      "id": "undeadvariants:drowning_zombified_piglin",
+      "required": false
+    }
+  ]
+}
