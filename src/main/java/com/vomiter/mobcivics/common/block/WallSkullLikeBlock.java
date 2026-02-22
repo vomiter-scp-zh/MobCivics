@@ -1,11 +1,13 @@
 package com.vomiter.mobcivics.common.block;
 
+import com.mojang.serialization.MapCodec;
 import com.vomiter.mobcivics.MobCivics;
 import com.vomiter.mobcivics.common.block.blockentity.SkullLikeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,6 +25,11 @@ public class WallSkullLikeBlock extends AbstractSkullBlock {
     public WallSkullLikeBlock(Properties props) {
         super(props);
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return null;
     }
 
     @Override

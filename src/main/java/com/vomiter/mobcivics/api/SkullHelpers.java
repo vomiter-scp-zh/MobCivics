@@ -2,8 +2,8 @@ package com.vomiter.mobcivics.api;
 
 import com.vomiter.mobcivics.common.block.SkullLikeBlock;
 import com.vomiter.mobcivics.common.block.WallSkullLikeBlock;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 
 import java.util.Arrays;
 

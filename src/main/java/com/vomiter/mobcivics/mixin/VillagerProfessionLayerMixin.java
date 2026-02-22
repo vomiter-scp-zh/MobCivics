@@ -1,7 +1,7 @@
 package com.vomiter.mobcivics.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.vomiter.mobcivics.common.capabilities.visual.VillagerVisualState;
+import com.vomiter.mobcivics.common.registry.MobCivicsAttachments;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.VillagerProfessionLayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +31,7 @@ public class VillagerProfessionLayerMixin {
             float p_117655_,
             CallbackInfo ci){
         if(livingEntity instanceof Villager villager){
-            if(VillagerVisualState.getOrDefault(villager).isShowCustomAttireLayer()) ci.cancel();
+            if(villager.getData(MobCivicsAttachments.VILLAGER_VISUAL).isShowCustomAttireLayer()) ci.cancel();
         }
     }
 

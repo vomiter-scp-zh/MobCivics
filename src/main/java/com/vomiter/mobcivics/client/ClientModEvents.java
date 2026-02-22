@@ -4,14 +4,14 @@ import com.vomiter.mobcivics.client.layer.MobCivicsVillagerClothesLayer_Villager
 import com.vomiter.mobcivics.client.renderer.SkullLikeRenderer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 public final class ClientModEvents {
     public static void init(IEventBus modBus){
         modBus.addListener(ClientModEvents::onClientSetup);
-        final IEventBus bus = MinecraftForge.EVENT_BUS;
+        final IEventBus bus = NeoForge.EVENT_BUS;
         modBus.addListener(ClientModEvents::onAddLayers);
         modBus.addListener(SkullLikeRenderer::onRegisterRenderers);
     }
@@ -22,7 +22,7 @@ public final class ClientModEvents {
     public static void onAddLayers(EntityRenderersEvent.AddLayers event) {
 
         // 1) 原版 Villager
-        var villagerRenderer = event.getEntityRenderer(EntityType.VILLAGER);
+        var villagerRenderer = event.getRenderer(EntityType.VILLAGER);
         if (villagerRenderer instanceof VillagerRenderer vr) {
             // 注意：你目前這個 layer 的 HumanoidModel 泛型不適用 VillagerRenderer
             // 這裡應該加「Villager 專用版本」(下面第 2 節會給)

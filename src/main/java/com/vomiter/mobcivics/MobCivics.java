@@ -3,15 +3,15 @@ package com.vomiter.mobcivics;
 import com.mojang.logging.LogUtils;
 import com.vomiter.mobcivics.client.ClientModEvents;
 import com.vomiter.mobcivics.common.event.EventHandler;
-import com.vomiter.mobcivics.common.event.ModEvents;
 import com.vomiter.mobcivics.common.registry.ModRegistries;
 import com.vomiter.mobcivics.data.ModDataGenerator;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
+import com.vomiter.mobcivics.network.MobCivicsNetwork;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import org.slf4j.Logger;
 
 @Mod(MobCivics.MOD_ID)
@@ -19,13 +19,12 @@ public class MobCivics {
     public static final String MOD_ID = "mobcivics";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public MobCivics(FMLJavaModLoadingContext context) {
+    public MobCivics(ModContainer mod, IEventBus modBus) {
         EventHandler.init();
-        IEventBus modBus = context.getModEventBus();
         modBus.addListener(this::commonSetup);
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        ModEvents.init(modBus);
+        mod.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
         modBus.addListener(ModDataGenerator::generateData);
+        modBus.addListener(MobCivicsNetwork::onRegisterPayloadHandlers);
         ModRegistries.register(modBus);
 
         if(FMLLoader.getDist().isClient()){

@@ -1,27 +1,39 @@
+// VillagerVisualSyncS2C.java (NeoForge 1.21.x)
 package com.vomiter.mobcivics.network;
 
+import com.vomiter.mobcivics.Helpers;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import java.util.function.Supplier;
+public record VillagerVisualSyncS2C(int entityId, CompoundTag tag) implements INetWorkPacket, CustomPacketPayload {
 
-public record VillagerVisualSyncS2C(int entityId, CompoundTag tag) implements INetWorkPacket{
+    // 每個 payload 需要一個唯一的 Type（你的 channel 名稱概念現在落在這裡）
+    public static final Type<VillagerVisualSyncS2C> TYPE =
+            new Type<>(Helpers.mobCivicsId("villager_visual_sync"));
 
-    public static void encode(VillagerVisualSyncS2C msg, FriendlyByteBuf buf) {
-        buf.writeVarInt(msg.entityId);
-        buf.writeNbt(msg.tag);
+    // StreamCodec：取代你原本的 encode/decode
+    public static final StreamCodec<RegistryFriendlyByteBuf, VillagerVisualSyncS2C> STREAM_CODEC =
+            StreamCodec.composite(
+                    ByteBufCodecs.VAR_INT, VillagerVisualSyncS2C::entityId,
+                    ByteBufCodecs.COMPOUND_TAG, VillagerVisualSyncS2C::tag,
+                    VillagerVisualSyncS2C::new
+            );
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static VillagerVisualSyncS2C decode(FriendlyByteBuf buf) {
-        int id = buf.readVarInt();
-        CompoundTag tag = buf.readNbt();
-        if (tag == null) tag = new CompoundTag();
-        return new VillagerVisualSyncS2C(id, tag);
+    // handler：用 ctx.enqueueWork 切回主執行緒（等價於你原本 consumerMainThread）
+    public static void handle(VillagerVisualSyncS2C msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (MobCivicsNetwork.CLIENT != null) {
+                MobCivicsNetwork.CLIENT.handle(msg, () -> ctx);
+            }
+        });
     }
-
-    public static void handle(VillagerVisualSyncS2C msg, Supplier<NetworkEvent.Context> ctx) {
-        if(MobCivicsNetwork.CLIENT != null) MobCivicsNetwork.CLIENT.handle(msg, ctx);
-    }
-
 }

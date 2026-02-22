@@ -1,37 +1,32 @@
+// MobCivicsNetwork.java (NeoForge 1.21.x)
 package com.vomiter.mobcivics.network;
 
-import com.vomiter.mobcivics.Helpers;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-public class MobCivicsNetwork {
-    private static final String PROTOCOL = "1";
-    public static SimpleChannel CHANNEL;
-    private static boolean initialized = false;
+public final class MobCivicsNetwork {
+    public static final String PROTOCOL = "1";
+
     public static IMobCivicsClientNetworkHandler CLIENT;
 
-    public static void onCommonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(MobCivicsNetwork::init); // 兩端都會跑，註冊 message handler
-    }
+    public static void onRegisterPayloadHandlers(RegisterPayloadHandlersEvent event) {
+        // 版本字串：伺服器/客戶端不一致會直接握手失敗
+        final PayloadRegistrar registrar = event.registrar(PROTOCOL);
 
-    public static void init() {
-        if (initialized) return;
-        if(FMLEnvironment.dist.isClient()) MobCivicsNetwork.CLIENT = new MobCivicsClientNetworkHandler();
-        initialized = true;
-        CHANNEL = NetworkRegistry.newSimpleChannel(
-                Helpers.mobCivicsId("main"),
-                () -> PROTOCOL, PROTOCOL::equals, PROTOCOL::equals
+        // 你的 client handler 初始化（也可以挪去更合適的 client-only init）
+        if (FMLEnvironment.dist == Dist.CLIENT && CLIENT == null) {
+            CLIENT = new MobCivicsClientNetworkHandler();
+        }
+
+        // 註冊：S2C
+        registrar.playToClient(
+                VillagerVisualSyncS2C.TYPE,
+                VillagerVisualSyncS2C.STREAM_CODEC,
+                VillagerVisualSyncS2C::handle
         );
-
-        int id = 0;
-
-        CHANNEL.messageBuilder(VillagerVisualSyncS2C.class, id++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(VillagerVisualSyncS2C::encode)
-                .decoder(VillagerVisualSyncS2C::decode)
-                .consumerMainThread(VillagerVisualSyncS2C::handle)
-                .add();
     }
+
+    private MobCivicsNetwork() {}
 }

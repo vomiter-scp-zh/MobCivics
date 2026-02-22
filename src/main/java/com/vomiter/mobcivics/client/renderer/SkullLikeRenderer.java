@@ -16,9 +16,10 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.RotationSegment;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
@@ -77,7 +78,7 @@ public class SkullLikeRenderer implements BlockEntityRenderer<SkullLikeBlockEnti
         RandomSource rand = RandomSource.create();
         rand.setSeed(state.getSeed(be.getBlockPos()));
         var modelRenderer = blockRenderer.getModelRenderer();
-        var modelData = net.minecraftforge.client.model.data.ModelData.EMPTY;
+        var modelData = ModelData.EMPTY;
 
         // 用 BakedModel 自帶的 render types
         for (var rt : baked.getRenderTypes(state, rand, modelData)) {

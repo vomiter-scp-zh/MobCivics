@@ -3,15 +3,9 @@ package com.vomiter.mobcivics.common.capabilities.visual;
 import com.vomiter.mobcivics.Helpers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
 
 public class VillagerVisualState implements IVillagerVisualState {
     public static final ResourceLocation KEY = Helpers.mobCivicsId( "villager_visual");
-    public static final Capability<IVillagerVisualState> VILLAGER_VISUAL =
-            CapabilityManager.get(new CapabilityToken<>() {});
 
     private boolean hideProfessionLayer;
     private boolean hideHeadLayer;
@@ -94,32 +88,4 @@ public class VillagerVisualState implements IVillagerVisualState {
             customTypeId = null;
         }
     }
-
-    public static IVillagerVisualState get(Villager villager) {
-        return villager.getCapability(VILLAGER_VISUAL)
-                .orElseThrow(() -> new IllegalStateException("Missing villager visual capability"));
-    }
-
-    public static boolean has(Villager villager) {
-        return villager.getCapability(VILLAGER_VISUAL).isPresent();
-    }
-
-    public static IVillagerVisualState getOrDefault(Villager villager) {
-        return villager.getCapability(VILLAGER_VISUAL)
-                .filter(state -> {
-                    if (state instanceof VillagerVisualState real) {
-                        return !real.isDefault();
-                    }
-                    return true;
-                })
-                .orElse(DefaultVillagerVisualState.INSTANCE);
-    }
-
-    public static VillagerVisualState getOrCreate(Villager villager) {
-        return villager.getCapability(VILLAGER_VISUAL)
-                .map(cap -> (VillagerVisualState) cap)
-                .orElseThrow(() -> new IllegalStateException("Villager visual cap missing"));
-    }
-
-
 }

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.vomiter.mobcivics.api.client.IVillagerClothesVariantResolver;
 import com.vomiter.mobcivics.client.villager.VillagerClothesTextureResolver;
-import com.vomiter.mobcivics.common.capabilities.visual.VillagerVisualState;
+import com.vomiter.mobcivics.common.registry.MobCivicsAttachments;
 import net.minecraft.client.model.VillagerModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -55,7 +55,7 @@ public class MobCivicsVillagerClothesLayer_Villager<
             float headPitch
     ) {
         if(entity.getType() == EntityType.VILLAGER){
-            if(!VillagerVisualState.getOrDefault(entity).isShowCustomAttireLayer()) return;
+            if(!entity.getData(MobCivicsAttachments.VILLAGER_VISUAL).isShowCustomAttireLayer()) return;
         }
         VillagerData data = entity.getVillagerData();
         if (data == null) {
@@ -147,8 +147,7 @@ public class MobCivicsVillagerClothesLayer_Villager<
                 poseStack,
                 consumer,
                 packedLight,
-                OverlayTexture.NO_OVERLAY,
-                1f, 1f, 1f, 1f
+                OverlayTexture.NO_OVERLAY
         );
     }
 

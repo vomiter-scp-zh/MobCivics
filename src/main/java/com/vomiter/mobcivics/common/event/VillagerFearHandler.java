@@ -9,7 +9,7 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -56,8 +56,8 @@ public class VillagerFearHandler {
         }
     }
 
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
+    public static void onLivingTick(EntityTickEvent.Pre event) {
+        if(!(event.getEntity() instanceof LivingEntity entity)) return;
         if (!(entity instanceof IVillagerThreat threat)) return;
         if (!threat.villagerFearEnabled(entity)) return;
         if (!(entity.level() instanceof ServerLevel level)) return;

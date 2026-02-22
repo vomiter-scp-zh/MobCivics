@@ -143,8 +143,7 @@ public class MobCivicsVillagerClothesLayer<
                 poseStack,
                 consumer,
                 packedLight,
-                OverlayTexture.NO_OVERLAY,
-                1f, 1f, 1f, 1f
+                OverlayTexture.NO_OVERLAY
         );
     }
 

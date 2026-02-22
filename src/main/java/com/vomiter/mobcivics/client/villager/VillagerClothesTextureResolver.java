@@ -5,7 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public final class VillagerClothesTextureResolver {
     private final String namespace;
@@ -22,7 +21,7 @@ public final class VillagerClothesTextureResolver {
     }
 
     public ResourceLocation professionTexture(VillagerProfession profession) {
-        return professionTexture(ForgeRegistries.VILLAGER_PROFESSIONS.getKey(profession));
+        return professionTexture(BuiltInRegistries.VILLAGER_PROFESSION.getKey(profession));
     }
 
     public ResourceLocation professionTexture(ResourceLocation profession) {

@@ -5,6 +5,7 @@ import com.vomiter.mobcivics.MobCivics;
 import com.vomiter.mobcivics.api.client.IVillagerDataHolder;
 import com.vomiter.mobcivics.api.client.IVillagerWithLayers;
 import com.vomiter.mobcivics.common.capabilities.visual.VillagerVisualState;
+import com.vomiter.mobcivics.common.registry.MobCivicsAttachments;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +16,6 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerDataHolder;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.slf4j.Logger;
 
 import java.util.Set;
@@ -26,8 +26,9 @@ public class ClothesLayerHelpers {
     private static final Set<String> WARN_ONCE = ConcurrentHashMap.newKeySet();
 
     static ResourceLocation getTypeId(LivingEntity entity) {
-        if (entity instanceof Villager villager && VillagerVisualState.has(villager)) {
-            return VillagerVisualState.getOrDefault(villager).getCustomTypeId();
+        VillagerVisualState state = entity.getData(MobCivicsAttachments.VILLAGER_VISUAL);
+        if (entity instanceof Villager && !state.isDefault()) {
+            return state.getCustomTypeId();
         } else if (entity instanceof VillagerDataHolder data) {
             // vanilla villager: 從 data.getVariant() 拿 VillagerType，再轉 key
             VillagerType type = data.getVariant();
@@ -41,8 +42,9 @@ public class ClothesLayerHelpers {
 
 
     static VillagerType getType(LivingEntity entity){
-        if(entity instanceof Villager villager && VillagerVisualState.has(villager)){
-            ResourceLocation customTypeId = VillagerVisualState.getOrDefault(villager).getCustomTypeId();
+        VillagerVisualState state = entity.getData(MobCivicsAttachments.VILLAGER_VISUAL);
+        if(entity instanceof Villager villager && !state.isDefault()){
+            ResourceLocation customTypeId = state.getCustomTypeId();
             if(customTypeId != null){
                 if(BuiltInRegistries.VILLAGER_TYPE.get(customTypeId) != null){
                     return BuiltInRegistries.VILLAGER_TYPE.get(customTypeId);
@@ -106,7 +108,7 @@ public class ClothesLayerHelpers {
     }
 
     private static String idPath(VillagerProfession prof) {
-        var key = ForgeRegistries.VILLAGER_PROFESSIONS.getKey(prof);
+        var key = BuiltInRegistries.VILLAGER_PROFESSION.getKey(prof);
         return key == null ? "none" : key.getPath();
     }
 
