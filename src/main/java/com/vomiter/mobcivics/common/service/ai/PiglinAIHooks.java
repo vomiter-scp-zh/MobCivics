@@ -32,7 +32,8 @@ public class PiglinAIHooks {
     }
 
     public static boolean isExtraZombified(EntityType<?> entityType){
-        return entityType.is(ZOMBIES_THAT_PIGLINS_FEAR);
+        if(entityType.is(ZOMBIES_THAT_PIGLINS_FEAR)) return true;
+        return false;
     }
 
     private static final TagKey<EntityType<?>> ZOMBIES_THAT_PIGLINS_FEAR =

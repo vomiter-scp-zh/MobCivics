@@ -1,6 +1,6 @@
-package com.vomiter.mobcivics.common.event;
+package com.vomiter.mobcivics.common.service.ai;
 
-import com.vomiter.mobcivics.api.common.entity.IVillagerThreat;
+import com.vomiter.mobcivics.api.common.entity.IVillagerThreatEntity;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.server.level.ServerLevel;
@@ -9,12 +9,11 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class VillagerFearHandler {
+public class VillagerThreatHandler {
 
     /**
      * per-level 的「目前快取對應的 gameTime」
@@ -56,9 +55,8 @@ public class VillagerFearHandler {
         }
     }
 
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
-        if (!(entity instanceof IVillagerThreat threat)) return;
+    public static void onLivingTick(LivingEntity entity) {
+        if (!(entity instanceof IVillagerThreatEntity threat)) return;
         if (!threat.villagerFearEnabled(entity)) return;
         if (!(entity.level() instanceof ServerLevel level)) return;
 

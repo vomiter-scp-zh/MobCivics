@@ -18,7 +18,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Arrays;
 
-public class VillagerVisualHandler {
+public class VillagerVisualEvents {
     static void onInteractionTest(PlayerInteractEvent.EntityInteract event){
         if(!event.getEntity().getMainHandItem().is(ModItems.TEST_WAND.get())) return;
         if(!(event.getTarget() instanceof Villager villager)) return;
