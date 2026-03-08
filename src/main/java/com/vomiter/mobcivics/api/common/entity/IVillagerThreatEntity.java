@@ -11,8 +11,13 @@ public interface IVillagerThreatEntity {
     }
     default boolean villagerFearRequiresLineOfSight() { return true; }
 
-    /** 只有回傳 true 才會寫 NEAREST_HOSTILE */
-    default boolean villagerFearEnabled(LivingEntity self) {
+    /** LivingEntity threatEntity: The threat entity.*/
+    default boolean villagerFearEnabled(LivingEntity threatEntity) {
         return true;
     }
+    default boolean villagerFearEnabled() {
+        return villagerFearEnabled((LivingEntity) this);
+    }
+
+
 }
