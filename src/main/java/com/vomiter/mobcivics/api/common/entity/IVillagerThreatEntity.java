@@ -1,6 +1,9 @@
 package com.vomiter.mobcivics.api.common.entity;
 
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.npc.Villager;
 
 public interface IVillagerThreatEntity {
     default double villagerFearRadius() { return 8.0D; }
@@ -11,13 +14,28 @@ public interface IVillagerThreatEntity {
     }
     default boolean villagerFearRequiresLineOfSight() { return true; }
 
+    default AbstractVillager getAbstractVillager(){
+        if(this instanceof LivingEntity living){
+            return new Villager(EntityType.VILLAGER, living.level());
+        }
+        return null;
+    }
+
+    @Deprecated
     /** LivingEntity threatEntity: The threat entity.*/
     default boolean villagerFearEnabled(LivingEntity threatEntity) {
-        return true;
+        return false;
     }
+
     default boolean villagerFearEnabled() {
-        return villagerFearEnabled((LivingEntity) this);
+        if(this instanceof LivingEntity living) return villagerFearEnabled(living);
+        return false;
     }
+
+    default boolean villagerFearEnabled(AbstractVillager villager) {
+        return villagerFearEnabled();
+    }
+
 
 
 }

@@ -57,7 +57,6 @@ public class VillagerThreatHandler {
 
     public static void onLivingTick(LivingEntity entity) {
         if (!(entity instanceof IVillagerThreatEntity threat)) return;
-        if (!threat.villagerFearEnabled(entity)) return;
         if (!(entity.level() instanceof ServerLevel level)) return;
 
         int scanInterval = Math.max(1, threat.villagerFearScanIntervalTicks());
@@ -80,6 +79,7 @@ public class VillagerThreatHandler {
         double radiusSqr = radius * radius;
 
         for (Villager villager : level.getEntitiesOfClass(Villager.class, box)) {
+            if(!threat.villagerFearEnabled(villager)) continue;
             double d2 = villager.distanceToSqr(entity);
             if (d2 > radiusSqr) continue;
             if (requireLos && !villager.getSensing().hasLineOfSight(entity)) continue;
