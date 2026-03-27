@@ -1,5 +1,6 @@
 package com.vomiter.mobcivics.client.renderer;
 
+import com.vomiter.mobcivics.api.client.IVillagerClothesVariantResolver;
 import com.vomiter.mobcivics.api.client.IVillagerDataHolder;
 import com.vomiter.mobcivics.client.layer.MobCivicsVillagerClothesLayer;
 import net.minecraft.client.model.HumanoidModel;
@@ -8,6 +9,7 @@ import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.ZombieVillager;
@@ -27,7 +29,10 @@ public abstract class AbstractVillagerLikeHumanoidRenderer<
         M extends HumanoidModel<T>
         > extends HumanoidMobRenderer<T, M> {
 
-    private final ResourceLocation baseTexture;
+    final ResourceLocation baseTexture;
+    final String clothesTextureNamespace;
+    final boolean renderLevelBadge;
+    final IVillagerClothesVariantResolver<T> variantResolver;
 
     protected AbstractVillagerLikeHumanoidRenderer(
             EntityRendererProvider.Context ctx,
@@ -37,17 +42,24 @@ public abstract class AbstractVillagerLikeHumanoidRenderer<
             String clothesTextureNamespace,
             boolean renderLevelBadge,
             Class<? extends Mob> entityClass,
-            com.vomiter.mobcivics.api.client.IVillagerClothesVariantResolver<T> variantResolver
+            IVillagerClothesVariantResolver<T> variantResolver
     ) {
         super(ctx, model, shadowRadius);
         this.baseTexture = baseTexture;
+        this.renderLevelBadge = renderLevelBadge;
+        this.variantResolver = variantResolver;
+        this.clothesTextureNamespace = clothesTextureNamespace;
 
         // 1) 裝甲 layer：預設僅 ZombieVillager 系啟用（避免 skeletal / 其他 humanoid 被硬套 villager armor）
         maybeAddArmorLayer(ctx, entityClass);
 
         // 2) 你的衣服/職業 layer：吃指定 namespace 的 assets
+        //addClothesLayer();
+    }
+
+    public void addClothesLayer(){
         this.addLayer(new MobCivicsVillagerClothesLayer<>(
-                 this,
+                this,
                 clothesTextureNamespace,
                 renderLevelBadge,
                 variantResolver

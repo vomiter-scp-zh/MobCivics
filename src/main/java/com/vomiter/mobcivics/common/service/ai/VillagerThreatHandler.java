@@ -1,6 +1,6 @@
-package com.vomiter.mobcivics.common.event;
+package com.vomiter.mobcivics.common.service.ai;
 
-import com.vomiter.mobcivics.api.common.entity.IVillagerThreat;
+import com.vomiter.mobcivics.api.common.entity.IVillagerThreatEntity;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +14,7 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class VillagerFearHandler {
+public class VillagerThreatHandler {
 
     /**
      * per-level 的「目前快取對應的 gameTime」
@@ -56,10 +56,8 @@ public class VillagerFearHandler {
         }
     }
 
-    public static void onLivingTick(EntityTickEvent.Pre event) {
-        if(!(event.getEntity() instanceof LivingEntity entity)) return;
-        if (!(entity instanceof IVillagerThreat threat)) return;
-        if (!threat.villagerFearEnabled(entity)) return;
+    public static void onLivingTick(LivingEntity entity) {
+        if (!(entity instanceof IVillagerThreatEntity threat)) return;
         if (!(entity.level() instanceof ServerLevel level)) return;
 
         int scanInterval = Math.max(1, threat.villagerFearScanIntervalTicks());
@@ -82,6 +80,7 @@ public class VillagerFearHandler {
         double radiusSqr = radius * radius;
 
         for (Villager villager : level.getEntitiesOfClass(Villager.class, box)) {
+            if(!threat.villagerFearEnabled(villager)) continue;
             double d2 = villager.distanceToSqr(entity);
             if (d2 > radiusSqr) continue;
             if (requireLos && !villager.getSensing().hasLineOfSight(entity)) continue;
