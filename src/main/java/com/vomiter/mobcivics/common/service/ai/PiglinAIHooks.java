@@ -43,7 +43,7 @@ public class PiglinAIHooks {
         }
 
         if (piglin != null && !optionalRepellentWithPiglin.isEmpty()) {
-            var rl = ForgeRegistries.BLOCKS.getKey(block);
+            var rl = BuiltInRegistries.BLOCK.getKey(block);
             var func = getOptionalRepellentFunctionWithPiglin(rl);
             if (func != null) {
                 return func.apply(state, piglin);

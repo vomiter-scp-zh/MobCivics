@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.npc.VillagerData;
 
@@ -32,7 +31,6 @@ public class VillagerClothesLayerRenderer {
         this.variantResolver = variantResolver;
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends Mob> void renderClothes(
             PoseStack poseStack,
             MultiBufferSource buffer,
@@ -135,8 +133,7 @@ public class VillagerClothesLayerRenderer {
                 poseStack,
                 consumer,
                 packedLight,
-                OverlayTexture.NO_OVERLAY,
-                1f, 1f, 1f, 1f
+                OverlayTexture.NO_OVERLAY
         );
     }
 }
